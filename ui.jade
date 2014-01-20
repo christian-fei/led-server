@@ -14,7 +14,7 @@ html(lang="en")
                 th ledState
             tr
                 td
-                    input(value=""+led,autofocus,type="number").led-number
+                    input(value=""+led,autofocus,type="number",max="13",min="1").led-number
                 td
                     input(id="strobe-toggler",type="checkbox", checked=strobe===true).strobe-state.state
                     label(for="strobe-toggler")
