@@ -23,21 +23,29 @@ function requestListener(request, response){
     */
 	var info = request.url.slice(1).split("/");
 	/*test if the request if valid*/
-	if( info[0] === "led" && info[1] > 0 && info[1] <= 13 && (info[2]=="on"||info[2]=="off")){
+	if( info[0] === "led" && info[1] > 0 && info[1] <= 13 && (info[2]=="on"||info[2]=="strobeon"||info[2]=="off")){
 		var led = parseInt(info[1]);
 		var state = info[2] == "on" ? true : false;
+                var strobe = false;
+                if( info[2] == "strobeon"){
+                    strobe = true;
+                    state = true;
+                }
                 response.writeHead(200, {"Content-Type":"text/html"});
-                jade.renderFile(__dirname + "/ui.jade", {led:led,state:state}, function(err,html){
+                jade.renderFile(__dirname + "/ui.jade", {led:led,state:state,strobe:strobe}, function(err,html){
                     response.end(html);
                 });
-		//response.end("turning led " + led + " " + (state ? "on" : "off"));
                 //
 		/*
 			change the led state on the arduino
 		*/
-		toggleLed(led,state);
+		toggleLed(led,state,strobe);
 	}else{
                 var fileName = "/" + url.parse( request.url ).pathname;
+                if( fileName === "//" ){
+                   response.writeHead(302,{"Location":"/led/13/on"});
+                   response.end();
+                }
                 fs.readFile(__dirname + fileName, function(err,data){
                     if(err){
                         response.writeHead(404);
@@ -61,10 +69,13 @@ var j5 = require("johnny-five"),
 board.on("ready",function(){
 	boardReady = true;
 });
-function toggleLed(led,on){
+function toggleLed(led,on,strobe){
 	if(boardReady){
 		console.log( "changing led state", led, on );
 		var led = new j5.Led(led);
 		if(on){led.on()}else{led.off()}
+                if(strobe){
+                    led.strobe(50);
+                }
 	}
 }

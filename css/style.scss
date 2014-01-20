@@ -1,6 +1,6 @@
 $limit      : 35em;
-$green      : #f0f;
-$red        : #e33;
+$green      : #34A300;
+$red        : #EE3636;
 
 
 *,*:after,*:before{margin:0;padding:0;box-sizing:border-box;}
@@ -23,7 +23,7 @@ header{
         border: 1px solid lightgrey;
     }
 
-    .led-state{
+    .state{
         display:none;
         &:checked + label{
             background: $green;

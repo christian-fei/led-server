@@ -10,12 +10,16 @@ html(lang="en")
         table.control-panel
             tr
                 th ledNumber
+                th ledStrobe
                 th ledState
             tr
                 td
                     input(value=""+led,autofocus,type="number").led-number
                 td
-                    input(id="state-toggler",type="checkbox", checked=state===true).led-state
+                    input(id="strobe-toggler",type="checkbox", checked=strobe===true).strobe-state.state
+                    label(for="strobe-toggler")
+                td
+                    input(id="state-toggler",type="checkbox", checked=state===true).led-state.state
                     label(for="state-toggler")
         script.
             //we can be *quite* certain that the url is in the right format if we deny all other access
@@ -25,27 +29,41 @@ html(lang="en")
             var ledNumberValue = regexGroups[1];
 
             var ledNumber = document.querySelector(".led-number"),
-                ledState  = document.querySelector(".led-state");
+                ledState  = document.querySelector(".led-state"),
+                strobeState  = document.querySelector(".strobe-state");
+            
+            ledNumber.addEventListener("keyup",handleLedNumber);
+            ledNumber.addEventListener("mousewheel",handleLedNumber);
             
             function pinExists(pin){
                 return (pin && pin > 0 && pin <= 13);
             }
 
-            ledNumber.addEventListener("keyup",function(e){
+            function handleLedNumber(e){
                 ledNumberValue = parseInt(ledNumber.value.trim());
 
-                if( e.which == 13 ){
+                if( e.which == 13 || e.which == 1){
                     if( pinExists(ledNumberValue) ){
-                        window.location = "/led/" + ledNumberValue + "/" + ledStateValue;
+                        setTimeout(function(){
+                            ledNumberValue = parseInt(ledNumber.value.trim());
+                            window.location = "/led/" + ledNumberValue + "/" + ledStateValue;
+                        },200);
                     }else{
                         ledNumberValue = 13;
                         ledNumber.value = 13;
                     }
                 }
-            });
+            }
+            
             ledState.addEventListener("change", function(e){
                 ledStateValue = e.target.checked ? "on" : "off";
                 if( pinExists(ledNumberValue) ){
                     window.location = "/led/" + ledNumberValue + "/" + ledStateValue;
+                }
+            });
+            strobeState.addEventListener("change", function(e){
+                var strobe = e.target.checked ? "strobeon" : "off";
+                if( pinExists(ledNumberValue) ){
+                    window.location = "/led/" + ledNumberValue + "/" + strobe;
                 }
             });
