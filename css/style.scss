@@ -1,0 +1,40 @@
+$limit      : 35em;
+$green      : #f0f;
+$red        : #e33;
+
+
+*,*:after,*:before{margin:0;padding:0;box-sizing:border-box;}
+
+body{
+    max-width: $limit;
+    width: 100%;
+    padding: .5em;
+    margin: 1em auto;
+}
+
+header{
+    text-align:center;
+}
+.control-panel{
+    width:100%;
+    tr > *{
+        padding: 1em;
+        text-align:center;
+        border: 1px solid lightgrey;
+    }
+
+    .led-state{
+        display:none;
+        &:checked + label{
+            background: $green;
+        }
+        + label{
+            display:block;
+            margin: auto;
+            background: $red;
+            height:  3em;
+            width:   3em;
+            
+        }
+    }
+}

@@ -1,5 +1,11 @@
 {
-  "dependencies": {
-    "johnny-five": "~0.7.11"
+  "devDependencies": {
+    "jade": "~1.1.5",
+    "johnny-five": "~0.7.11",
+    "gulp-autoprefixer": "0.0.4",
+    "gulp-compass": "~1.0.7",
+    "gulp": "~3.4.0",
+    "mime": "~1.2.11",
+    "url": "~0.7.9"
   }
 }

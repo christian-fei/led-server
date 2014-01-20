@@ -1,0 +1,51 @@
+doctype html
+html(lang="en")
+    head
+        title Arduino led web API
+        link(href="/css/style.css",rel="stylesheet")
+        meta(name="viewport",content="width=device-width")
+    body
+        header
+            h1 Arduino led web API
+        table.control-panel
+            tr
+                th ledNumber
+                th ledState
+            tr
+                td
+                    input(value=""+led,autofocus,type="number").led-number
+                td
+                    input(id="state-toggler",type="checkbox", checked=state===true).led-state
+                    label(for="state-toggler")
+        script.
+            //we can be *quite* certain that the url is in the right format if we deny all other access
+            var regexGroups = window.location.pathname.match(/\/led\/([0-9]{1,2})\/(.*)?/);
+
+            var ledStateValue = regexGroups[2];
+            var ledNumberValue = regexGroups[1];
+
+            var ledNumber = document.querySelector(".led-number"),
+                ledState  = document.querySelector(".led-state");
+            
+            function pinExists(pin){
+                return (pin && pin > 0 && pin <= 13);
+            }
+
+            ledNumber.addEventListener("keyup",function(e){
+                ledNumberValue = parseInt(ledNumber.value.trim());
+
+                if( e.which == 13 ){
+                    if( pinExists(ledNumberValue) ){
+                        window.location = "/led/" + ledNumberValue + "/" + ledStateValue;
+                    }else{
+                        ledNumberValue = 13;
+                        ledNumber.value = 13;
+                    }
+                }
+            });
+            ledState.addEventListener("change", function(e){
+                ledStateValue = e.target.checked ? "on" : "off";
+                if( pinExists(ledNumberValue) ){
+                    window.location = "/led/" + ledNumberValue + "/" + ledStateValue;
+                }
+            });
